@@ -2,7 +2,7 @@
 # NOTE: anything marked "NOTE" is Amy's note to self
 # NOTE: TODO are questions
 
-# Does this do anything?
+# TODO what is this for?
 # -*- coding: utf-8 -*-
 
 # TODO what is this import __future__?
@@ -19,8 +19,8 @@ def get_episode_links():
     html = scraperwiki.scrape('http://www.tiestoblog.com/tiesto-club-life/')
     soup = BeautifulSoup(html)
     # NOTE every episode is enclosed in an <article> tag that has this itemtype
-    #TODO need to read up on .select CSS selectors in doc and bbc.co; pulls out selectors marking episode somehow? This returns an iterable rather than just one item?
-    # TODO how do I find these patterns faster than trying to sift through "View Source"?
+    #TODO need to read up on .select CSS selectors. This returns an iterable rather than just one item? What's the difference between find_all and select?
+    # TODO how do I find these unique patterns faster than trying to sift through "View Source"?
     postings = soup.select('[itemtype="http://schema.org/BlogPosting"]')
     for p in postings:
         # NOTE every episode has an A tag with rel "bookmark" in it
@@ -29,7 +29,7 @@ def get_episode_links():
             # TODO what is repr() and file=sys.stderr?
             print('Unable to find rel=bookmark in %s' % repr(p), file=sys.stderr)
             continue
-        # TODO What is this 0 index showing? what is this taking the first element of - as in, what else is in here? why just want the first one?
+        # TODO Removing item from list form? only one item in list
         bk_a = bk_a_list[0]
         #TODO check what attrs does. Gets href key from dictionary
         item_href = bk_a.attrs.get('href')
@@ -96,6 +96,7 @@ def main():
     # TODO Why does traditional syntax "print data_items" not work?
     print(data_items)
 
+    # Write out to the sqlite database using scraperwiki library
     # scraperwiki.sqlite.save(unique_keys=['url'], data=data_items)
 
 
