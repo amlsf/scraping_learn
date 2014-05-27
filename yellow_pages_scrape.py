@@ -2,6 +2,7 @@
 # TODO do I need to have any regex checks?
 # TODO is the coding defensive enough?
 # TODO should I use yield instead of return?
+# TODO incorporate sleep function somewhere
 
 # TODO what is this utf-8 comment for?
 # -*- coding: utf-8 -*-
@@ -16,8 +17,6 @@ import requests
 import urllib2
 import scraperwiki
 
-# TODO how do I scrape through multiple pages? Scrape links to additional pages until no more
-# TODO write this function so it does a custom URL
 def create_url():
     keyword = raw_input("Enter keyword to search: ")
     location = raw_input("Enter address, zipcode, or neighborhood: ")
@@ -37,10 +36,23 @@ def create_url():
     location = "-".join(location)
 
     url = "http://www.yellowpages.com/" + location + "/" + keyword
-    print url
+    return url
 
-def get_pagination():
-    pass
+def get_pagination(url):
+
+    yield url
+    html = urllib2.urlopen(url).read()
+    soup = BeautifulSoup(html)
+
+    while soup.select('[rel="next"]'):
+        next_page = soup.select('[rel="next"]')
+        next_page = next_page[0]
+        next_page_href = next_page.attrs.get('href')
+
+        yield next_page_href
+
+        html = urllib2.urlopen(next_page_href).read()
+        soup = BeautifulSoup(html)
 
 def create_soup(url):
     html = urllib2.urlopen(url).read()
@@ -73,7 +85,8 @@ def get_business_name(listing):
     if not business_name:
         print "no business name"
         business_name = ""
-    business_name = business_name[0].get_text()
+    else:
+        business_name = business_name[0].get_text()
     return business_name
 
 def get_business_phone(listing):
@@ -81,7 +94,8 @@ def get_business_phone(listing):
     if not phone:
         print "no phone"
         phone = ""
-    phone = phone[0].get_text()
+    else:
+        phone = phone[0].get_text()
     return phone
 
 def get_business_address(listing):
@@ -90,36 +104,41 @@ def get_business_address(listing):
     if not street_address:
         print "no street address"
         street_address = ""
-    street_address = street_address[0].get_text()
+    else:
+        street_address = street_address[0].get_text()
 
     # get city
     locality = listing.select('[itemprop="addressLocality"]')
     if not locality:
         print "no address locality"
         locality = ""
-    locality = locality[0].get_text()
+    else:
+        locality = locality[0].get_text()
 
     # get state
     region = listing.select('[itemprop="addressRegion"]')
     if not region:
         print "no address region"
         region = ""
-    region = region[0].get_text()
+    else:
+        region = region[0].get_text()
 
     # get postal code
     postal_code = listing.select('[itemprop="postalCode"]')
     if not postal_code:
         print "no postal code"
         postal_code = ""
-    postal_code = postal_code[0].get_text()
+    else:
+        postal_code = postal_code[0].get_text()
 
     return {'street_address': street_address, 'locality': locality, 'region': region, 'postal_code': postal_code}
 
 
+# TODO how to get items in specific order? Format around city is not quite right: shows up like "Tucson\, ;AZ;"
+# TODO How do I create the vcard .vcf and export? (don't have mac or outlook or any vcard organizer)
 # TODO: [What does this last part mean - is this mac specific?] "For extra credit, transform the results into  vCard entries (your choice of version). You can check their validity by clicking on them once and pressing spacebar in Finder (or control-click and choose Quick Look if you prefer the mouse)"
-# TODO how to get items to order?
-# TODO How do I create the vcard .vcf and export?
 def create_vcard(business_name, business_phone, business_address):
+    # TODO vcards are like sets? (.add)
     j = vobject.vCard()
     o = j.add('fn')
     o.value = business_name
@@ -134,16 +153,13 @@ def create_vcard(business_name, business_phone, business_address):
     o = j.add('adr')
     o.value = vobject.vcard.Address(street=business_address['street_address'], city=business_address['locality'], region=business_address['region'], code=business_address['postal_code'])
 
-    # TODO better to use yield?
     return j.serialize()
 
 # TODO try out Scrapy for execution methods
 def main():
-    create_url()
-    # create_soup("http://www.yellowpages.com/tucson-az/cupcakes?g=tucson%2C%20az&q=cupcakes")
-
-    # url = create_url()
-    # create_soup(url)
+    url = create_url()
+    for link in get_pagination(url):
+        create_soup(link)
 
 if __name__ == "__main__":
     main()

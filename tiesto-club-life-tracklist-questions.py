@@ -8,9 +8,8 @@
 # TODO what is this import __future__?
 from __future__ import print_function
 import re
-# TODO what is import sys?
 import sys
-# TODO: what is scraperwiki? just alternative to urllib2 and requests, but specific to morph.io? Google says some sort of paid service? I pip installed it: "Successfully installed scraperwiki dumptruck"
+# TODO: what is scraperwiki? just alternative to urllib2 and requests? Google says some sort of paid service? I pip installed it: "Successfully installed scraperwiki dumptruck"
 import scraperwiki
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -19,8 +18,8 @@ def get_episode_links():
     html = scraperwiki.scrape('http://www.tiestoblog.com/tiesto-club-life/')
     soup = BeautifulSoup(html)
     # NOTE every episode is enclosed in an <article> tag that has this itemtype
-    #TODO need to read up on .select CSS selectors. This returns an iterable rather than just one item? What's the difference between find_all and select?
-    # TODO how do I find these unique patterns faster than trying to sift through "View Source"?
+    #TODO What's the difference between find_all and select?
+    # TODO is there a faster way to find unique patterns faster than trying to sift through "View Source" & inspector?
     postings = soup.select('[itemtype="http://schema.org/BlogPosting"]')
     for p in postings:
         # NOTE every episode has an A tag with rel "bookmark" in it
@@ -29,14 +28,14 @@ def get_episode_links():
             # TODO what is repr() and file=sys.stderr?
             print('Unable to find rel=bookmark in %s' % repr(p), file=sys.stderr)
             continue
-        # TODO Removing item from list form? only one item in list
+        # NOTE Removing item from list form? only one item in list
         bk_a = bk_a_list[0]
-        #TODO check what attrs does. Gets href key from dictionary
+        #NOTE check what attrs does. attrs creates dictionary
         item_href = bk_a.attrs.get('href')
         if not item_href:
             print('Odd, a@rel=bookmark had no href %s' % repr(bk_a), file=sys.stderr)
             continue
-        # TODO what is this regex checking for in the href? NOTE: Making sure it follows the convetion of episode href, e.g. "/tiesto-club-life-367/"
+        # NOTE: Regex checking to make sure it follows the convention of episode href, e.g. "/tiesto-club-life-367/"
         if re.search(r'life-\d+/$', item_href):
             # NOTE stores link in generator
             # TODO benefit of yield over append and return a list here to manage memory?
@@ -59,7 +58,6 @@ def get_episode_bodies():
         if not bodies:
             print('Unable to find articleBody in %s' % repr(posting), file=sys.stderr)
             continue
-        # TODO what is this 0 index referencing?
         body = bodies[0]
         ma = re.search(r'life-(\d+)/$', url)
         if not ma:
@@ -88,7 +86,6 @@ def main():
     # careful, .weekday() is Monday indexed so Sun = 6
     #if 6 != datetime.utcnow().weekday():
     #    return 0
-    # TODO: why not just return a list instead of a generator in get_episode_bodies()?
     # NOTE: puts all the items in get_episode_bodies generator into data_items and puts in sqlite database.
     data_items = list(get_episode_bodies())
     # episode# may be a better key

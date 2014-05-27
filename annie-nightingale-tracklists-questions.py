@@ -22,7 +22,7 @@ def get_episodes():
     episodes = soup.select('[typeof="po:Episode"]')
     for epi in episodes:
         titles = epi.select('[property="dc:title"]')
-        #TODO if there's nothing in titles, then continue on in next for loop iteration?
+        #NOTE if there's nothing in titles, then continue on in next for loop iteration?
         if not titles:
             continue
         title = titles[0]
@@ -58,9 +58,9 @@ def get_listings(url):
         print('Whoa, bogus URL format you have there: %s' % repr(url), file=sys.stderr)
         pid = url  # *shrug* but pid is the primary key, so it has to be something
     soup = BeautifulSoup(html)
-    #TODO check this. Pulling out all the broadcast types
+    #NOTE Pulling out all the broadcast types
     broadcasts = soup.select('[typeof="po:Broadcast"]')
-    #TODO what's a crummy? when you say "pick", is that why you randomly selected the 0 index? Is this episode_date to instantiate?
+    #TODO what's a crummy? Elaborate on this comment. Is this episode_date to instantiate?
     # pick a crummy, but non-None default
     episode_date = datetime.utcnow().isoformat(' ').split(' ')[0]
     if broadcasts:

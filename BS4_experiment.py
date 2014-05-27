@@ -1,4 +1,4 @@
-# Experimenting with examples from http://www.pythonforbeginners.com/python-on-the-web/beautifulsoup-4-python/
+# Experimenting with examples from http://www.pythonforbeginners.com/python-on-the-web/beautifulsoup-4-python/ and BS4 documentation http://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
 from bs4 import BeautifulSoup
 import requests
