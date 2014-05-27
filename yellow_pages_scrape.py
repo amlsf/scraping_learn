@@ -12,14 +12,14 @@
 # -*- coding: utf-8 -*-
 
 from bs4 import BeautifulSoup
-import sys
-import re
+# import sys
 import vobject
 import string
+# import re
 # TODO which of these 3 below is better?
-import requests
 import urllib2
-import scraperwiki
+# import requests
+# import scraperwiki
 
 def create_url():
     keyword = raw_input("Enter keyword to search: ")
