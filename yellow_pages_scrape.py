@@ -1,8 +1,12 @@
-# TODO Did Matthew want me to write my scraper in Morph.io??
-# TODO do I need to have any regex checks?
-# TODO is the coding defensive enough?
-# TODO should I use yield instead of return?
+# TODO Did Matthew want me to write this scraper in Morph.io?
+# TODO try out Scrapy for execution method
 # TODO incorporate sleep function somewhere
+# TODO How do I export the .vcf file and view? (I don't have mac or outlook or any vcard organizer)
+# TODO: [What does the last part of this stmt mean - is this mac specific?] "For extra credit, transform the results into  vCard entries (your choice of version). You can check their validity by clicking on them once and pressing spacebar in Finder (or control-click and choose Quick Look if you prefer the mouse)"
+
+# TODO do I need to have any regex checks?
+# TODO should I use yield instead of return?
+# TODO is the coding defensive enough?
 
 # TODO what is this utf-8 comment for?
 # -*- coding: utf-8 -*-
@@ -135,8 +139,6 @@ def get_business_address(listing):
 
 
 # TODO how to get items in specific order? Format around city is not quite right: shows up like "Tucson\, ;AZ;"
-# TODO How do I create the vcard .vcf and export? (don't have mac or outlook or any vcard organizer)
-# TODO: [What does this last part mean - is this mac specific?] "For extra credit, transform the results into  vCard entries (your choice of version). You can check their validity by clicking on them once and pressing spacebar in Finder (or control-click and choose Quick Look if you prefer the mouse)"
 def create_vcard(business_name, business_phone, business_address):
     # TODO vcards are like sets? (.add)
     j = vobject.vCard()
@@ -155,7 +157,6 @@ def create_vcard(business_name, business_phone, business_address):
 
     return j.serialize()
 
-# TODO try out Scrapy for execution methods
 def main():
     url = create_url()
     for link in get_pagination(url):
