@@ -43,7 +43,6 @@ def create_url():
     return url
 
 def get_pagination(url):
-
     yield url
     html = urllib2.urlopen(url).read()
     soup = BeautifulSoup(html)
