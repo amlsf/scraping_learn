@@ -1,9 +1,9 @@
+# TODO what is this for?
+# -*- coding: utf-8 -*-
+
 # NOTE: lots of "defensive coding" in here.
 # NOTE: anything marked "NOTE" is Amy's note to self
 # NOTE: TODO are questions
-
-# TODO what is this for?
-# -*- coding: utf-8 -*-
 
 # TODO what is this import __future__?
 from __future__ import print_function

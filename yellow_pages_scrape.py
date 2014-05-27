@@ -1,19 +1,20 @@
-#TODO Did Matthew want me to write my scraper in Morph.io??
-#TODO do I need to have any regex checks?
-#TODO is the coding defensive enough?
+# TODO Did Matthew want me to write my scraper in Morph.io??
+# TODO do I need to have any regex checks?
+# TODO is the coding defensive enough?
 # TODO should I use yield instead of return?
 
 # TODO what is this utf-8 comment for?
 # -*- coding: utf-8 -*-
 
 from bs4 import BeautifulSoup
-# TODO which of these 3 is better?
+import sys
+import re
+import vobject
+import string
+# TODO which of these 3 below is better?
 import requests
 import urllib2
 import scraperwiki
-import re
-import sys
-import vobject
 
 # TODO how do I scrape through multiple pages? Scrape links to additional pages until no more
 # TODO write this function so it does a custom URL
@@ -21,8 +22,25 @@ def create_url():
     keyword = raw_input("Enter keyword to search: ")
     location = raw_input("Enter address, zipcode, or neighborhood: ")
 
-    url = ""
-    return url
+    # remove punctuation
+    for c in string.punctuation:
+        keyword = keyword.replace(c,"")
+    for c in string.punctuation:
+        location = location.replace(c,"")
+
+    # separate keywords into list
+    keyword = keyword.split()
+    location = location.split()
+
+    # create keyword insertions separated by dash
+    keyword = "-".join(keyword)
+    location = "-".join(location)
+
+    url = "http://www.yellowpages.com/" + location + "/" + keyword
+    print url
+
+def get_pagination():
+    pass
 
 def create_soup(url):
     html = urllib2.urlopen(url).read()
@@ -121,10 +139,11 @@ def create_vcard(business_name, business_phone, business_address):
 
 # TODO try out Scrapy for execution methods
 def main():
+    create_url()
+    # create_soup("http://www.yellowpages.com/tucson-az/cupcakes?g=tucson%2C%20az&q=cupcakes")
+
     # url = create_url()
     # create_soup(url)
-    create_soup("http://www.yellowpages.com/tucson-az/cupcakes?g=tucson%2C%20az&q=cupcakes")
-    # create_vcard()
 
 if __name__ == "__main__":
     main()
