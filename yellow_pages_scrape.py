@@ -48,6 +48,7 @@ def get_pagination(url):
     html = urllib2.urlopen(url).read()
     soup = BeautifulSoup(html)
 
+    # stop when there are no more pages (marked by no more "next rel" in source)
     while soup.select('[rel="next"]'):
         next_page = soup.select('[rel="next"]')
         next_page = next_page[0]
